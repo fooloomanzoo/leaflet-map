@@ -1,3 +1,3 @@
 # \<leaflet-map\>
 
-custom element of leafletjs maps
+custom element for [leafletjs](http://leafletjs.com)

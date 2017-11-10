@@ -1,6 +1,6 @@
 {
   "name": "leaflet-map",
-  "description": "custom element of leaflet maps",
+  "description": "custom element for leafletjs",
   "main": "leaflet-map.html",
   "dependencies": {
     "polymer": "Polymer/polymer",

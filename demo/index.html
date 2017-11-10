@@ -14,10 +14,6 @@
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
-        #large {
-          --leaflet-map-height: 500px;
-          --leaflet-map-width: 500px;
-        }
       </style>
     </custom-style>
   </head>
@@ -31,9 +27,17 @@
       </demo-snippet>
     </div>
     <div class="vertical-section-container centered">
-      <h3>Fullscreen leaflet-map demo</h3>
+      <h3>Large leaflet-map demo</h3>
       <demo-snippet>
         <template>
+          <custom-style>
+            <style>
+              #large {
+                --leaflet-map-height: 500px;
+                --leaflet-map-width: 500px;
+              }
+            </style>
+          </custom-style>
           <leaflet-map id="large"></leaflet-map>
         </template>
       </demo-snippet>

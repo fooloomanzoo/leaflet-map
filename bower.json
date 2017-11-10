@@ -1,0 +1,18 @@
+{
+  "name": "leaflet-map",
+  "description": "custom element of leaflet maps",
+  "main": "leaflet-map.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "leaflet": "^1.2.0",
+    "leaflet-providers": "^1.1.17"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}

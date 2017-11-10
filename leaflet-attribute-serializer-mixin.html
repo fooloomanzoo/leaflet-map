@@ -1,0 +1,37 @@
+<script>
+
+    const RegExpLatLngAlt = /\s*LatLng\((\d*\.?\d*)\s*,\s*(\d*\.?\d*)\s*,?\s*(\d*\.?\d*)?\s*\)/i;
+
+
+    /**
+     * mixin that extends an elemnt to serialize leaflet objects
+     *
+     * @mixinFunction
+     * @polymer
+     */
+    const LeafletAttributeSerializerMixin = (superClass) => { // eslint-disable-line no-unused-vars no-undef
+
+    return class extends superClass {
+
+      _serializeValue(value) {
+        if (value instanceof L.LatLng) {
+          return value.toString();
+        }
+        return super._serializeValue(value);
+      }
+
+      _deserializeValue(value, type) {
+        if (type == L.LatLng) {
+          const parsed = RegExpLatLngAlt.exec(value);
+          if (parsed !== null) {
+            return new (L.LatLng.bind.apply(L.LatLng, parsed.slice(1)));
+          }
+          return undefined;
+        }
+        return super._deserializeValue(value, type);
+      }
+
+    }
+  }
+
+</script>

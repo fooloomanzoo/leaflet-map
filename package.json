@@ -1,0 +1,22 @@
+{
+  "name": "leaflet-map",
+  "version": "0.1.0",
+  "description": "custom element for leafletjs",
+  "main": "index.html",
+  "scripts": {
+    "postinstall": "bower install && npm run inline-stylesheets",
+    "inline-stylesheets": "node inline-external-css.js bower_components/leaflet/dist/leaflet.css leaflet-shared-style.html",
+    "prepublish": "npm run build && git add . && git commit -m \"publish new version\" && git push && npm version patch",
+    "build": "bower update && npm run inline-stylesheets && polymer analyze > analysis.json",
+    "prestart": "polymer analyze > analysis.json",
+    "start": "polymer serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lefletjs",
+    "leaflet",
+    "map"
+  ],
+  "author": "fooloomanzoo",
+  "license": "MIT"
+}

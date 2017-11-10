@@ -1,0 +1,222 @@
+<script src="../leaflet/dist/leaflet.js"></script>
+
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="leaflet-shared-style.html">
+<link rel="import" href="leaflet-attribute-serializer-mixin.html">
+
+<dom-module id="leaflet-map">
+  <script>
+    /**
+     * `leaflet-map`
+     * custom element of leafletjs maps
+     *
+     *
+     * @appliesMixin LeafletAttributeSerializerMixin
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class LeafletMap extends LeafletAttributeSerializerMixin(Polymer.Element) {
+      constructor() {
+        super();
+      }
+
+      static get is() { return 'leaflet-map'; }
+
+      static get properties() {
+        return {
+      		// The [Coordinate Reference System](#crs) to use. Don't change this if you're not sure what it means.
+      		crs: {
+            type: Object,
+            value: L.CRS.EPSG3857
+          },
+
+      		// Initial geographic center of the map
+      		center: {
+            type: L.LatLng
+          },
+
+      		// @option zoom: Number = undefined
+      		// Initial map zoom level
+      		zoom: {
+            type: Number
+          },
+
+      		// @option minZoom: Number = *
+      		// Minimum zoom level of the map.
+      		// If not specified and at least one `GridLayer` or `TileLayer` is in the map,
+      		// the lowest of their `minZoom` options will be used instead.
+      		minZoom: {
+            type: Number
+          },
+
+      		// @option maxZoom: Number = *
+      		// Maximum zoom level of the map.
+      		// If not specified and at least one `GridLayer` or `TileLayer` is in the map,
+      		// the highest of their `maxZoom` options will be used instead.
+      		maxZoom: {
+            type: Number
+          },
+
+      		// @option layers: Layer[] = []
+      		// Array of layers that will be added to the map initially
+      		layers: {
+            type: Array,
+            value: []
+          },
+
+      		// @option maxBounds: LatLngBounds = null
+      		// When this option is set, the map restricts the view to the given
+      		// geographical bounds, bouncing the user back if the user tries to pan
+      		// outside the view. To set the restriction dynamically, use
+      		// [`setMaxBounds`](#map-setmaxbounds) method.
+      		maxBounds: {
+            type: L.LatLngBounds
+          },
+
+      		// @option renderer: Renderer = *
+      		// The default method for drawing vector layers on the map. `L.SVG`
+      		// or `L.Canvas` by default depending on browser support.
+      		renderer: {
+            type: Function
+          },
+
+
+      		// @section Animation Options
+      		// @option zoomAnimation: Boolean = true
+      		// Whether the map zoom animation is enabled. By default it's enabled
+      		// in all browsers that support CSS3 Transitions except Android.
+      		zoomAnimation: {
+            type: Boolean,
+            value: true
+          },
+
+      		// @option zoomAnimationThreshold: Number = 4
+      		// Won't animate zoom if the zoom difference exceeds this value.
+      		zoomAnimationThreshold: {
+            type: Number,
+            value: 4
+          },
+
+      		// @option fadeAnimation: Boolean = true
+      		// Whether the tile fade animation is enabled. By default it's enabled
+      		// in all browsers that support CSS3 Transitions except Android.
+      		fadeAnimation: {
+            type: Boolean,
+            value: true
+          },
+
+      		// @option markerZoomAnimation: Boolean = true
+      		// Whether markers animate their zoom with the zoom animation, if disabled
+      		// they will disappear for the length of the animation. By default it's
+      		// enabled in all browsers that support CSS3 Transitions except Android.
+      		markerZoomAnimation: {
+            type: Boolean,
+            value: true
+          },
+
+      		// @option transform3DLimit: Number = 2^23
+      		// Defines the maximum size of a CSS translation transform. The default
+      		// value should not be changed unless a web browser positions layers in
+      		// the wrong place after doing a large `panBy`
+      		transform3DLimit: {
+            type: Number,
+            value: 8388608
+          }, // Precision limit of a 32-bit float
+
+      		// @section Interaction Options
+      		// @option zoomSnap: Number = 1
+      		// Forces the map's zoom level to always be a multiple of this, particularly
+      		// right after a [`fitBounds()`](#map-fitbounds) or a pinch-zoom.
+      		// By default, the zoom level snaps to the nearest integer; lower values
+      		// (e.g. `0.5` or `0.1`) allow for greater granularity. A value of `0`
+      		// means the zoom level will not be snapped after `fitBounds` or a pinch-zoom.
+      		zoomSnap: {
+            type: Number,
+            value: 1
+          },
+
+      		// @option zoomDelta: Number = 1
+      		// Controls how much the map's zoom level will change after a
+      		// [`zoomIn()`](#map-zoomin), [`zoomOut()`](#map-zoomout), pressing `+`
+      		// or `-` on the keyboard, or using the [zoom controls](#control-zoom).
+      		// Values smaller than `1` (e.g. `0.5`) allow for greater granularity.
+      		zoomDelta: {
+            type: Number,
+            value: 1
+          },
+
+      		// @option trackResize: Boolean = true
+      		// Whether the map automatically handles browser window resize to update itself.
+      		trackResize: {
+            type: Boolean,
+            value: true
+          }
+        };
+      }
+
+      static get template() {
+        return `
+          ${this.styleTemplate}
+          ${this.contentTemplate}
+        `;
+      }
+
+      static get styleTemplate() {
+        return `
+          <style include="leaflet-shared-style">
+            :host {
+              display: block;
+              position: relative;
+            }
+            #map {
+              height: var(--leaflet-map-height, 200px);
+              width: var(--leaflet-map-width, auto);
+            }
+            .leaflet-control-zoom-in::after {
+              content: "";
+              background: white;
+            }
+          </style>
+        `;
+      }
+
+      static get contentTemplate() {
+        return `
+          <div id="map"></div>
+        `;
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.map = window.L.map(this.$.map, {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         maxZoom: 20,
+         attribution: '&copy; Openstreetmap | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(this.map);
+        setTimeout( () => {
+          this.map.invalidateSize();
+        }, 0);
+
+        navigator.geolocation.getCurrentPosition((pos) => {
+          var crd = pos.coords;
+
+          console.log('Your current position is:');
+          console.log(`Latitude : ${crd.latitude}`);
+          console.log(`Longitude: ${crd.longitude}`);
+          console.log(`More or less ${crd.accuracy} meters.`);
+          this.map.setView(new L.LatLng(crd.latitude, crd.longitude));
+        }, (err) => {
+          console.log(err);
+        });
+        this._initialized = true;
+      }
+    }
+
+    window.customElements.define(LeafletMap.is, LeafletMap);
+  </script>
+</dom-module>
